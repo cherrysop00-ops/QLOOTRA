@@ -777,7 +777,7 @@ def cached_recs_for_taste(taste):
 
 
 def plan_trip_mode():
-    st.subheader("✈️ Plan a Trip (Game Mode)")
+    st.subheader("✈️ Plan a Trip")
 
     if "chat_trip" not in st.session_state:
         st.session_state.chat_trip = []
