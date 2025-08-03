@@ -26,36 +26,17 @@ GEMINI_CACHE = {}
 # ---------- Load API keys ----------
 # ---------- Load API keys from 10 separate files ----------
 # ---------- Load Gemini API keys from 10 separate files ----------
-def load_gemini_keys():
-    keys = []
-    for i in range(1, 18):  # .gemini_key1 to .gemini_key10
-        try:
-            with open(f".gemini_key{i}") as f:
-                key = f.read().strip()
-                if key:
-                    keys.append(key)
-        except FileNotFoundError:
-            st.warning(f"⚠️ Missing: .gemini_key{i}")
-        except Exception as e:
-            st.error(f"❌ Error reading .gemini_key{i}: {e}")
-    return keys
+# ✅ Load from secrets.toml (in Streamlit Cloud)
+import random
 
-# ---------- Load single key file (like Qloo) ----------
-def load_key(fname):
-    try:
-        return open(fname).read().strip()
-    except Exception:
-        return None
+gemini_keys = st.secrets["GEMINI_KEYS"].split(",")
+gemini_key = random.choice(gemini_keys).strip()
+qloo_key = st.secrets["QLOO_API_KEY"]
 
-# ✅ Load keys
-gemini_keys = load_gemini_keys()
-qloo_key = load_key(".qloo_key")
+# Track current key index (for rotation)
+if "current_gemini_key_idx" not in st.session_state:
+    st.session_state.current_gemini_key_idx = 0
 
-
-if not gemini_keys:
-    st.error("❌ Gemini API keys missing in any of .gemini_key1 - .gemini_key10")
-if not qloo_key:
-    st.warning("⚠️ Qloo API key missing in .qloo_key")
 
 # MODIFICATION: Global variable to track current Gemini key index
 if "current_gemini_key_idx" not in st.session_state:
