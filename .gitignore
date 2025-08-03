@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+*.pyc
+.streamlit/secrets.toml
+.gemini_key*
+.qloo_key*
