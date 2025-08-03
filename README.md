@@ -1,10 +1,9 @@
 # QLOOTRA
 QLOOTRA is your AI travel companion powered by Gemini and Qloo. Plan smart trips across 5 phases — PLAN, PACK, JOURNEY, DESTINY, RETURN — with tailored suggestions for outfits, music, food, and destinations based on your unique tastes. Switch between casual chat and immersive travel planning anytime.
-# QLOOTRA – AI Travel Companion ✈️🌍
 
 🔗 **Live App**: [Click to Open](https://qlootra-abjb7stfdzwt4ozg4nmzll.streamlit.app/)
 
-# 🌍 QLOOTRA – AI Travel Companion (v1.0)
+# 🌍 QLOOTRA – AI Travel Companion ✈️ (v1.0)
 
 **QLOOTRA** (short for **Qloo Travel Recommender Assistant**) is an intelligent travel chatbot that blends *casual AI chat* with *cultural recommendations*. Powered by **Google Gemini** and **Qloo**, it creates personalized travel plans across **5 gamified trip phases** — using your tastes in music, movies, fashion, food, and more.
 
