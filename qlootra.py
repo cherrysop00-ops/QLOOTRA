@@ -920,43 +920,77 @@ def plan_trip_mode():
             st.session_state.chat_trip.append(("assistant", msg))
             st.markdown(msg)
 
-    elif trip_phase == "DESTINY":
-        dest = st.session_state.trip.get("destination", "")
-        taste_seeds = list(set(filter(None, st.session_state.tastes + [
-            st.session_state.get("tastes_music", ""),
-            st.session_state.get("tastes_food", ""),
-        ])))
-
+    elif st.session_state.trip_phase == "DESTINY":
+        st.subheader("🍽️ DESTINY – Taste the Destination!")
+    
+        destination = st.session_state.trip.get("destination", "your destination")
+        days = st.session_state.trip.get('days', '?')
+        budget = st.session_state.trip.get('budget', 'N/A')
+        st.write(f"Your trip to **{destination}** for **{days} days** is locked in! (Budget: {budget})")
+    
+        # --- PART 1: Gemini Suggestion (Code A) ---
+        gemini_prompt = f"""
+    I'm planning a trip to {destination}. Based on my general tastes, suggest:
+    1. 5 local foods I should try
+    2. 5 must-visit places in {destination}
+    
+    Only suggest items that are truly relevant to {destination}. Avoid generic or unrelated suggestions.
+    Respond as:
+    
+    🍲 Local foods: food1, food2, ...
+    🗺️ Must-visit: place1, place2, ...
+    """
+        gemini_output = generate_with_gemini(gemini_prompt)
+        if gemini_output:
+            st.chat_message("assistant").markdown(gemini_output)
+            st.session_state.chat_trip.append(("assistant", gemini_output))
+    
+        st.divider()  # Optional, to separate the sections visually
+    
+        # --- PART 2: Personalized Taste-based Recommendations (Code B) ---
+        # Gather user tastes
+        trip = st.session_state.trip
+        # You may need to adjust the below if keys differ in your session_state!
+        taste_seeds = list(set(
+            filter(None,
+                st.session_state.tastes + [
+                    st.session_state.get("tastes_music", ""),
+                    st.session_state.get("tastes_food", "")
+                ]
+            )
+        ))
+    
+        # Let user select tastes to customize
         if taste_seeds:
             selected_tastes = st.multiselect(
-                f"Select tastes to discover highlights for {dest}:",
+                f"Select tastes to discover highlights for {destination}:",
                 options=taste_seeds,
                 default=taste_seeds,
             )
         else:
             selected_tastes = []
-
+    
         destiny_foods_items = set()
         destiny_places_items = set()
-
-        if st.button(f"Discover {dest} Highlights"):
-            with st.spinner(f"Discovering {dest}'s highlights..."):
-                for taste in selected_tastes[:5]:
+    
+        if st.button(f"Discover {destination} Highlights"):
+            with st.spinner(f"Discovering {destination}'s highlights..."):
+                for taste in selected_tastes[:5]:  # At most 5
                     recs = cached_recs_for_taste(taste)
                     destiny_foods_items.update(recs.get("food", []))
                     destiny_places_items.update(recs.get("travel", []))
                     destiny_places_items.update(recs.get("place", []))
-
+    
             destiny_foods = clean_items(list(destiny_foods_items))
             destiny_foods = filter_items(destiny_foods)[:5]
-
+    
             shown_places = clean_items(list(destiny_places_items))
             shown_places = filter_items(shown_places)[:5]
-
-            if dest and dest not in shown_places:
-                shown_places.insert(0, dest)
+    
+            if destination and destination not in shown_places:
+                shown_places.insert(0, destination)
                 shown_places = shown_places[:5]
-
+    
             msg = ""
             if destiny_foods:
                 msg += f"🍲 Try these local foods: {', '.join(destiny_foods)}\n"
@@ -966,6 +1000,7 @@ def plan_trip_mode():
                 msg = "Tell me a bit more about your food or place tastes!"
             st.session_state.chat_trip.append(("assistant", msg))
             st.markdown(msg)
+
 
     elif trip_phase == "RETURN":
         rating = st.slider("How was your trip?", 1, 10, key="trip_rating")
