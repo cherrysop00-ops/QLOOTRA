@@ -960,21 +960,7 @@ def plan_trip_mode():
             )
         ))
         # Optional: Only if you want Code A functionality (ALWAYS show Gemini recommendations)
-            gemini_prompt = f"""
-            I'm planning a trip to {dest}. Based on my general tastes, suggest:
-            1. 5 local foods I should try
-            2. 5 must-visit places in {dest}
-            
-            Only suggest items that are truly relevant to {dest}. Avoid generic or unrelated suggestions.
-            Respond as:
-            
-            🍲 Local foods: food1, food2, ...
-            🗺️ Must-visit: place1, place2, ...
-            """
-            gemini_output = generate_with_gemini(gemini_prompt)
-            if gemini_output:
-                st.chat_message("assistant").markdown(gemini_output)
-                st.session_state.chat_trip.append(("assistant", gemini_output))
+           
 
         # Let user select tastes to customize
         if taste_seeds:
@@ -1007,15 +993,7 @@ def plan_trip_mode():
                 shown_places.insert(0, destination)
                 shown_places = shown_places[:5]
     
-            msg = ""
-            if destiny_foods:
-                msg += f"🍲 Try these local foods: {', '.join(destiny_foods)}\n"
-            if shown_places:
-                msg += f"🗺️ Must-visit: {', '.join(shown_places)}"
-            if not msg.strip():
-                msg = "Tell me a bit more about your food or place tastes!"
-            st.session_state.chat_trip.append(("assistant", msg))
-            st.markdown(msg)
+
 
 
     elif trip_phase == "RETURN":
