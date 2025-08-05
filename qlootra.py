@@ -841,6 +841,7 @@ def plan_trip_mode():
             st.success(msg)
 
     elif trip_phase == "PACK":
+        st.subheader(" PACK ")
         rec_tastes = gather_tastes()
         if rec_tastes:
             selected_tastes = st.multiselect(
@@ -882,6 +883,7 @@ def plan_trip_mode():
             st.markdown(msg)
 
     elif trip_phase == "JOURNEY":
+        st.subheader(" JOURNEY ")
         rec_tastes = gather_tastes()
         if rec_tastes:
             selected_tastes = st.multiselect(
@@ -921,7 +923,7 @@ def plan_trip_mode():
             st.markdown(msg)
 
     elif st.session_state.trip_phase == "DESTINY":
-        st.subheader("🍽️ DESTINY – Taste the Destination!")
+        st.subheader("🍽️ DESTINY ")
     
         destination = st.session_state.trip.get("destination", "your destination")
         days = st.session_state.trip.get('days', '?')
@@ -993,7 +995,15 @@ def plan_trip_mode():
                 shown_places.insert(0, destination)
                 shown_places = shown_places[:5]
     
-
+                    msg = ""
+        if destiny_foods:
+            msg += f"🍲 Try these local foods: {', '.join(destiny_foods)}\n"
+        if shown_places:
+            msg += f"🗺️ Must-visit: {', '.join(shown_places)}"
+        if not msg.strip():
+            msg = "Tell me a bit more about your food or place tastes!"
+        st.session_state.chat_trip.append(("assistant", msg))
+        st.markdown(msg)
 
 
     elif trip_phase == "RETURN":
@@ -1023,6 +1033,7 @@ def plan_trip_mode():
                 rec_reply = "Enjoy your trip!"
         st.session_state.chat_trip.append(("assistant", rec_reply))
         st.chat_message("assistant").markdown(rec_reply)
+        
 
 # Caller example (if mode is set somewhere else in your app)
 if st.session_state.get("mode") == "Plan a Trip":
