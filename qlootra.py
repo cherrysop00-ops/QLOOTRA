@@ -995,15 +995,7 @@ def plan_trip_mode():
                 shown_places.insert(0, destination)
                 shown_places = shown_places[:5]
     
-                    msg = ""
-        if destiny_foods:
-            msg += f"🍲 Try these local foods: {', '.join(destiny_foods)}\n"
-        if shown_places:
-            msg += f"🗺️ Must-visit: {', '.join(shown_places)}"
-        if not msg.strip():
-            msg = "Tell me a bit more about your food or place tastes!"
-        st.session_state.chat_trip.append(("assistant", msg))
-        st.markdown(msg)
+                    
 
 
     elif trip_phase == "RETURN":
